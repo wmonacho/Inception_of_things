@@ -38,4 +38,10 @@ sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-
 
 #sudo kubectl cluster-info
 
+<<<<<<< HEAD
 #sudo kubectl port-forward svc/argocd-server -n argocd 8080:443
+=======
+#sudo kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+172.18.0.3
+>>>>>>> 6bed5a3 (wmonacho)
