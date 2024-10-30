@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress    
+metadata:            
+  name: MyIngress  
+  labels:        
+    app: MyIngress 
+spec:
+  rules:
+  - host: StarCitizen.com
+    http:
+      paths:
+      - path: /
+        pathType:
+        backend:
+          service:
+            name: app-one
+            port:
+              number: 8080
+  - host: Squadron42.com
+    http:
+      paths:
+      - path: /
+        pathType:
+        backend:
+          service:
+            name: app-two
+            port:
+              number: 8080
+  - host: 4EarlyAcess.com
+    http:
+      paths:
+      - path: /
+        pathType:
+        backend:
+          service:
+            name: app-three
+            port:
+              number: 8080

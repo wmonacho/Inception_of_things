@@ -1,0 +1,24 @@
+apiVersion: apps/v1   
+kind: Deployment    
+metadata:            
+  name: app-one
+  labels:        
+    app: app-one   
+spec:            
+  replicas: 3    
+  selector:       
+    matchLabels: 
+      app: app-one
+  template:        
+    metadata:    
+      labels:    
+        app: app-one
+    spec:        
+      containers:    
+      - name: app-one
+        image: paulbouwer/hello-kubernetes:1.10
+        env: 
+          - name: MESSAGE
+            value: "Star Citizen is beautiful"
+        ports:
+          - containerPort: 8080

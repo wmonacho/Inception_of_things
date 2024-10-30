@@ -1,0 +1,27 @@
+$Sscript = <<-SCRIPT
+  apt-get update && apt-get install -y net-tools
+  curl -sfL https://get.k3s.io | sh -s - --flannel-iface=eth1
+  cat /var/lib/rancher/k3s/server/node-token > /shared/k3s_token
+
+  kubectl apply -f /shared/App --validate=warn
+SCRIPT
+
+
+Vagrant.configure("2") do |config|
+
+  config.vm.synced_folder "./", "/shared"
+  config.vm.define "wmonachoS" do |server|
+    
+    server.vm.box = "bento/debian-12"
+    server.vm.hostname = "wmonachoS"
+    server.vm.network "private_network", ip: "192.168.56.110"
+    server.vm.provider "virtualbox" do |vm|
+      
+      vm.memory = 1024
+      vm.cpus = 2
+      vm.name = "wmonachoS"
+    end
+
+    server.vm.provision "shell", inline: $Sscript
+  end
+end

@@ -1,0 +1,51 @@
+$Sscript = <<-SCRIPT
+  apt-get update -y
+  apt-get install net-tools
+  export K3S_KUBECONFIG_MODE=644
+  export INSTALL_K3S_EXEC="server --node-ip=192.168.56.110 --bind-address=192.168.56.110 --flannel-iface=eth1"
+  curl -sfL https://get.k3s.io | sh -
+  cat /var/lib/rancher/k3s/server/node-token > /shared/k3s_token
+SCRIPT
+
+$SWscript = <<-SCRIPT
+  apt-get update -y
+  apt-get install net-tools
+  export K3S_TOKEN_FILE="/shared/k3s_token"
+  export K3S_URL="https://192.168.56.110:6443"
+  export INSTALL_K3S_EXEC="--node-ip=192.168.56.111  --flannel-iface=eth1"
+  curl -sfL https://get.k3s.io | sh -
+SCRIPT
+
+Vagrant.configure("2") do |config|
+
+  config.vm.synced_folder "./", "/shared", create: true
+  
+  config.vm.define "wmonachoS" do |server|
+    
+    server.vm.box = "bento/debian-12"
+    server.vm.hostname = "wmonachoS"
+    server.vm.network "private_network", ip: "192.168.56.110"
+    server.vm.provider "virtualbox" do |vm|
+      
+      vm.memory = 1024
+      vm.cpus = 2
+      vm.name = "wmonachoS"
+    end
+
+    server.vm.provision "shell", inline: $Sscript
+  end
+  config.vm.define "wmonachoSW" do |worker|
+    
+    worker.vm.box = "bento/debian-12"
+    worker.vm.hostname = "wmonachoSW"
+    worker.vm.network "private_network", ip: "192.168.56.111"
+    worker.vm.provider "virtualbox" do |vm|
+      
+      vm.memory = 1024
+      vm.cpus = 2
+      vm.name = "wmonachoSW"
+    end
+
+    worker.vm.provision "shell", inline: $SWscript
+  end
+end

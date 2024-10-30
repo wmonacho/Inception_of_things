@@ -1,0 +1,24 @@
+apiVersion: apps/v1   
+kind: Deployment    
+metadata:            
+  name: app-two
+  labels:        
+    app: app-two   
+spec:            
+  replicas: 1    
+  selector:       
+    matchLabels: 
+      app: app-two
+  template:        
+    metadata:    
+      labels:    
+        app: 
+    spec:        
+      containers:    
+      - name: app-two
+        image: paulbouwer/hello-kubernetes:1.10
+        env: 
+          - name: MESSAGE
+            value: "Squadron42 release in 2026" 
+        ports:
+          - containerPort: 8080
